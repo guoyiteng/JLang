@@ -5,7 +5,7 @@ import java.util.*;
 public class ConcurrentReflection {
     static class ClassReflection {
 
-        public static void run(List<Object>output) {
+        public static void run1(List<Object> output) {
             ClassReflectionE ce = new ClassReflectionE();
             Class clse = ce.getClass();
             Field[] fe = clse.getDeclaredFields();
@@ -38,7 +38,7 @@ public class ConcurrentReflection {
 
     static class MethodReflection {
 
-        public static void run(List<Object>output) throws Exception {
+        public static void run(List<Object> output) throws Exception {
             MethodReflection mr = new MethodReflection();
             Class cls = mr.getClass();
             MethodComparator mc = new MethodComparator();
@@ -119,10 +119,10 @@ public class ConcurrentReflection {
         static double sd = 0.544;
         static long sl = 1234449L;
 
-        public static void run(List<Object>output) throws Exception {
+        public static void run(List<Object> output) throws Exception {
             output.add(Long.class);
             output.add(Short.class);
-            FieldReflection aaa = new FieldReflection(1534,2);
+            FieldReflection aaa = new FieldReflection(1534, 2);
             Class cls = aaa.getClass();
             Field[] f = cls.getDeclaredFields();
             Arrays.sort(f, new FieldComparator());
@@ -140,8 +140,8 @@ public class ConcurrentReflection {
                 } else if (fld.getName().equals("bb")) {
                     fld.setBoolean(aaa, true);
                 } else if (fld.getName().equals("cc")) {
-                    fld.setShort(aaa, new Short((short)17));
-                    fld.set(aaa, new Short((short)34));
+                    fld.setShort(aaa, new Short((short) 17));
+                    fld.set(aaa, new Short((short) 34));
                 } else if (fld.getName().equals("ff")) {
                     fld.setFloat(aaa, 0.3432f);
                 } else if (fld.getName().equals("d")) {
@@ -216,11 +216,11 @@ public class ConcurrentReflection {
         }
     }
 
-    static int THREADS = 2;
+    final static int THREADS = 5;
 
     static class PrimitiveReflection {
 
-        public static void run(List<Object>output) {
+        public static void run(List<Object> output) {
             output.add(int.class);
             output.add(int.class.getSuperclass());
             output.add(long.class);
@@ -240,18 +240,17 @@ public class ConcurrentReflection {
         @Override
         public void run() {
             try {
-                for (int i = 0; i < 5; i++) {
-                    ClassReflection.run(output);
+                for (int i = 0; i < 2; i++) {
+                    ClassReflection.run1(output);
                     MethodReflection.run(output);
-                    FieldReflection.run(output);
+//                     FieldReflection.run(output);
                     PrimitiveReflection.run(output);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                System.out.println(e.getMessage());
             }
         }
     }
-
 
 
     public static void main(String[] args) {

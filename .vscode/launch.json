@@ -5,14 +5,32 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "lldb",
+            "name": "(gdb) Launch",
+            "type": "cppdbg",
             "request": "launch",
-            "name": "Debug",
-            "program": "${workspaceFolder}/playground/src/Sync.o",
+            "program": "./playground/src/ConcurrentReflection.o",
             "args": [],
+            "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
+            "environment": [{"JAVA_HOME": "/usr/lib/jvm/jdk1.7.0_80"}],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
+            "type": "gdb",
+            "request": "launch",
+            "name": "Launch Program",
+            "target": "./playground/src/ConcurrentReflection.o",
+            "cwd": "${workspaceRoot}",
+            "valuesFormatting": "parseText",
             "env": {"JAVA_HOME": "/usr/lib/jvm/jdk1.7.0_80"},
-            "terminal": "console"
         }
     ]
 }

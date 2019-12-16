@@ -8,5 +8,14 @@
 		"**/docs/**": true,
 		"**/classes/**": true,
 		"**/out/**": true,
+	},
+	"files.associations": {
+		"*.vert": "glsl",
+		"*.frag": "glsl",
+		"*.ss": "r",
+		"*.ml": "ocaml",
+		"*.mli": "ocaml",
+		"unordered_map": "cpp",
+		"functional": "cpp"
 	}
 }
