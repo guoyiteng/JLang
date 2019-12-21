@@ -595,7 +595,7 @@ jsize jni_GetStringUTFLength(JNIEnv *env, jstring str) {
 const char *jni_GetStringUTFChars(JNIEnv *env, jstring str, jboolean *isCopy) {
     auto len = env->GetStringLength(str);
     auto chars = env->GetStringChars(str, /*isCopy*/ nullptr);
-    char *res = (char *)malloc(len + 1);
+    char *res = (char *)__GC_malloc(len + 1);
     // TODO: Incorrect conversion from Java string chars to UTF-8 chars.
     // only works for 1 byte long UTF-16 chars (a.k.a. things that are already
     // in UTF-8 form)

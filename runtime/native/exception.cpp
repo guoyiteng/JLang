@@ -4,6 +4,7 @@
 
 #include "reflect.h"
 #include "stack_trace.h"
+#include "native.h"
 
 #include <cstdio>
 #include <cstring>
@@ -85,7 +86,7 @@ void deleteJavaException(_Unwind_Reason_Code reason,
 
 _Unwind_Exception *createUnwindException(jobject jexception) {
     JavaException_t *ret =
-        (JavaException_t *)GC_malloc(sizeof(JavaException_t));
+        (JavaException_t *)__GC_malloc(sizeof(JavaException_t));
     ret->jexception = jexception;
     ret->unwindException.exception_class = javaExceptionClass;
     ret->unwindException.exception_cleanup = deleteJavaException;

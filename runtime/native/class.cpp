@@ -13,6 +13,7 @@
 #include "rep.h"
 #include "monitor.h"
 #include "threads.h"
+#include "native.h"
 
 #include <algorithm>
 #include <cassert>
@@ -65,9 +66,9 @@ PRIM_CLASS_DEF(void)
 #define PRIM_REGISTER(prim)                                                    \
     if (1) {                                                                   \
         JavaClassInfo *newInfo =                                               \
-            (JavaClassInfo *)malloc(sizeof(JavaClassInfo));                    \
+            (JavaClassInfo *)__GC_malloc(sizeof(JavaClassInfo));                    \
         int nameLen = strlen(#prim) + 1;                                       \
-        char *newName = (char *)malloc(nameLen);                               \
+        char *newName = (char *)__GC_malloc(nameLen);                               \
         memcpy(newName, #prim, nameLen);                                       \
         newInfo->name = newName;                                               \
         newInfo->isIntf = 0;                                                   \
@@ -85,7 +86,7 @@ PRIM_CLASS_DEF(void)
 // just copy over DV
 // dw475 TODO should copy over sync vars
 #define REGISTER_PRIM_CLASS(prim)                                              \
-    PRIM_CLASS(prim, Klass) = (JClassRep *)malloc(classSize);                  \
+    PRIM_CLASS(prim, Klass) = (JClassRep *)__GC_malloc(classSize);                  \
     memcpy(PRIM_CLASS(prim, Klass), baseClass, classSize);                     \
     Polyglot_native_##prim =                                                   \
         reinterpret_cast<jclass>(PRIM_CLASS(prim, Klass));                     \
@@ -208,14 +209,14 @@ const jclass initArrayClass(const char *name) {
 
     // create base array class and its info.
     jclass runtimeArrayClass = getRuntimeArrayClass();
-    jclass newKlazz = (jclass)malloc(jclass_size);
+    jclass newKlazz = (jclass)__GC_malloc(jclass_size);
     memcpy(newKlazz, runtimeArrayClass, jclass_size);
-    JavaClassInfo *newInfo = (JavaClassInfo *)malloc(sizeof(JavaClassInfo));
+    JavaClassInfo *newInfo = (JavaClassInfo *)__GC_malloc(sizeof(JavaClassInfo));
     memcpy(newInfo, GetJavaClassInfo(runtimeArrayClass), sizeof(JavaClassInfo));
 
     // init and set name.
     int nameLen = strlen(name) + 1; // add the '\0' terminator
-    char *newName = (char *)malloc(nameLen);
+    char *newName = (char *)__GC_malloc(nameLen);
     memcpy(newName, name, nameLen);
     newInfo->name = newName;
 
@@ -237,7 +238,7 @@ const jclass initArrayClass(const char *name) {
     DispatchVector *runtimeArrayCdv = getRuntimeArrayCdv();
     int runtimeArrayCdvSize =
         sizeof(DispatchVector) + numOfCdv * sizeof(void *);
-    DispatchVector *newCdv = (DispatchVector *)malloc(runtimeArrayCdvSize);
+    DispatchVector *newCdv = (DispatchVector *)__GC_malloc(runtimeArrayCdvSize);
     memcpy(newCdv, runtimeArrayCdv, runtimeArrayCdvSize);
     newCdv->SetClassPtr(new JClassRep *(Unwrap(newKlazz)));
     newInfo->cdv = (void *)newCdv;
@@ -528,7 +529,7 @@ JArrayRep *createArrayHelper(const char *arrType, int *len, int depth) {
     }
 
     JArrayRep *arr =
-        (JArrayRep *)GC_MALLOC(sizeof(JArrayRep) + elementSize * (*len));
+        (JArrayRep *)__GC_malloc(sizeof(JArrayRep) + elementSize * (*len));
     arr->Super()->SetCdv(cdv);
     arr->SetLength(*len);
     arr->SetElemSize(elementSize);
@@ -563,7 +564,7 @@ jarray create1DArray(const char *arrType, int len) {
     }
 
     JArrayRep *arr =
-        (JArrayRep *)GC_MALLOC(sizeof(JArrayRep) + elementSize * len);
+        (JArrayRep *)__GC_malloc(sizeof(JArrayRep) + elementSize * len);
     arr->Super()->SetCdv(cdv);
     arr->SetLength(len);
     arr->SetElemSize(elementSize);

@@ -7,9 +7,12 @@
 // JVM intrinsics, and do not exist in a VM-independent way.
 // So we re-implement them here.
 #include "unsafe.h"
+
 #include "class.h"
 #include "rep.h"
 #include "stack_trace.h"
+#include "native.h"
+
 #include <cstdio>
 #include <cstdlib>
 #include <jni.h>
@@ -256,7 +259,7 @@ jlong Java_sun_misc_Unsafe_allocateMemory(JNIEnv *env, jobject unsafe,
     if (size < 0) {
         return 0; // TODO throw IllegalArgumentException instead!
     }
-    void *ptr = malloc(size); // TODO check that I might need to align this?
+    void *ptr = __GC_malloc(size); // TODO check that I might need to align this?
     if (ptr == NULL) {
         return NULL; // TODO throw OutOfMemoryException
     } else {

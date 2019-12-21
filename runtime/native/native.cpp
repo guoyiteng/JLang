@@ -98,6 +98,11 @@ GetJavaNativeFunc(jclass cls,               // e.g., java.lang.Object
 }
 
 extern "C" void* __GC_malloc(size_t size) {
-    return GC_malloc(size);
+    if (size > 10000)
+    {
+        printf("error\n");
+    }
+    GC_gcollect();
+    return GC_debug_malloc(size, "overwrite error", 0);
 }
 

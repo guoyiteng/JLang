@@ -104,7 +104,7 @@ jstring internJString(jstring str) {
     ScopedLock lock(Monitor::Instance().globalMutex());
 
     HashableShortArray *h =
-        (HashableShortArray *)malloc(sizeof(HashableShortArray));
+        (HashableShortArray *)__GC_malloc(sizeof(HashableShortArray));
     h->len = (int)Unwrap(str)->Chars()->Length();
     h->chars = (unsigned short *)Unwrap(str)->Chars()->Data();
     auto search = InternedStrings.find(*h);
@@ -342,9 +342,9 @@ void JVM_EnableCompiler(JNIEnv *env, jclass compCls) {
 void JVM_DisableCompiler(JNIEnv *env, jclass compCls) { return; }
 
 void JVM_StartThread(JNIEnv *env, jobject thread) {
-    ScopedLock lock(Monitor::Instance().globalMutex());
+    // ScopedLock lock(Monitor::Instance().globalMutex());
     
-    Threads::Instance().startThread(thread);
+    // Threads::Instance().startThread(thread);
 }
 
 void JVM_StopThread(JNIEnv *env, jobject thread, jobject exception) {
@@ -1033,7 +1033,7 @@ jboolean JVM_SupportsCX8(void) { return JNI_FALSE; }
 
 const char *JVM_GetClassNameUTF(JNIEnv *env, jclass cb) {
     auto name = GetJavaClassInfo(cb)->name;
-    char *res = (char *)malloc(strlen(name) + 1);
+    char *res = (char *)__GC_malloc(strlen(name) + 1);
     strcpy(res, name);
     return res;
 }

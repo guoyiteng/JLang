@@ -5,6 +5,7 @@
 #include "class.h"
 #include "rep.h"
 #include "monitor.h"
+#include "native.h"
 
 #include <jni.h>
 #include <string.h>
@@ -74,7 +75,7 @@ jobject CreateJavaObject(jclass clazz) {
     if (info == NULL || info->cdv == NULL) {
         return NULL;
     }
-    JObjectRep *new_obj = (JObjectRep *)GC_MALLOC(info->obj_size);
+    JObjectRep *new_obj = (JObjectRep *)__GC_malloc(info->obj_size);
     if (new_obj == NULL) {
         return NULL;
     }
@@ -96,7 +97,7 @@ jobject CloneJavaObject(jobject obj) {
         JArrayRep *array = Unwrap(reinterpret_cast<jarray>(obj));
         // info-> obj_size == sizeof(JArrayRep)
         size = info->obj_size + (array->Length() * array->ElemSize());
-        new_obj = (jobject)GC_MALLOC(size);
+        new_obj = (jobject)__GC_malloc(size);
     } else {
         new_obj = CreateJavaObject(cls);
         size = info->obj_size;

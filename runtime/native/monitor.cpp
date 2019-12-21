@@ -4,6 +4,7 @@
 
 #include "rep.h"
 #include "threads.h"
+#include "native.h"
 
 #include <algorithm>
 #include <assert.h>
@@ -29,7 +30,7 @@ std::unordered_map<jobject, std::pair<pthread_t, int>> lockMap;
 
 static void initSyncVars(jobject obj) {
     sync_vars *syncVars =
-        reinterpret_cast<sync_vars *>(GC_MALLOC(sizeof(sync_vars)));
+        reinterpret_cast<sync_vars *>(__GC_malloc(sizeof(sync_vars)));
 
     pthread_mutexattr_t attr;
     pthread_mutexattr_init(&attr);
